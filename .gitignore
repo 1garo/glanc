@@ -1,2 +1,3 @@
 go.sum
 database/gen.json
+tx.db
