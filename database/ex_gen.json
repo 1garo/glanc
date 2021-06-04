@@ -1,0 +1,7 @@
+{
+    "genesis_time": "2021-06-04T12:00:00.000000000Z",
+    "chain_id": "id",
+    "balances": {
+      "vardai": 1000000
+    }
+  }
