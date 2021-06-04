@@ -1,4 +1,4 @@
-module gitlab.com/1garo/glanc
+module github.com/1garo/glanc
 
 go 1.16
 
