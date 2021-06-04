@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/1garo/glanc/database"
 	"github.com/spf13/cobra"
-	"gitlab.com/1garo/glanc/database"
 )
 
 func balancesCmd() *cobra.Command {
