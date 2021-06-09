@@ -9,6 +9,7 @@ type gen struct {
 	Balances map[Account]uint `json:"balances"`
 }
 
+// loadgen -> load genesis file content
 func loadgen(path string) (gen, error) {
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
