@@ -12,9 +12,9 @@ func balancesCmd() *cobra.Command {
 	var balancesCmd = &cobra.Command{
 		Use:   "balances",
 		Short: "Interact with balances (list...).",
-		// PreRunE: func(cmd *cobra.Command, args []string) error {
-		// 	return incorrectUsageErr()
-		// },
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			return incorrectUsageErr()
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
@@ -36,11 +36,12 @@ var balancesListCmd = &cobra.Command{
 		}
 		defer state.Close()
 
-		fmt.Println("Accounts balances:")
+		fmt.Println("Accounts balances: ")
 		fmt.Println("__________________")
 		fmt.Println("")
+
 		for account, balance := range state.Balances {
-			fmt.Printf("%s: %d", account, balance)
+			fmt.Printf("%s: %d\n", account, balance)
 		}
 	},
 }
