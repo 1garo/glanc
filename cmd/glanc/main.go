@@ -10,18 +10,7 @@ import (
 /*
 
 TODO:
-- test transaction to populate tx.db and
-tx add --from=andrej --to=andrej --value=3
-tx add --from=andrej --to=andrej --value=700
-tx add --from=babayaga --to=andrej --value=2000
-tx add --from=andrej --to=andrej --value=100 --data=reward
-tx add --from=babayaga --to=andrej --value=1
-
-- create functions descriptions, e.g:
-
-// a does X
-func a() {}
-
+- Document types with golang // <StructName> description style
 */
 
 func main() {
@@ -31,7 +20,7 @@ func main() {
 		Run:   func(cmd *cobra.Command, args []string) {},
 	}
 
-	glancCmd.AddCommand(versionCmd)
+	glancCmd.AddCommand(versionCmd())
 	glancCmd.AddCommand(balancesCmd())
 	glancCmd.AddCommand(txCmd())
 
