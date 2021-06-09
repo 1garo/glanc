@@ -14,6 +14,7 @@ type State struct {
 	dbFile    *os.File
 }
 
+// NewStateFromDisk -> load all state information
 func NewStateFromDisk() (*State, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -54,6 +55,7 @@ func NewStateFromDisk() (*State, error) {
 	return state, nil
 }
 
+// apply -> apply tx to a certain State
 func (s *State) apply(tx Tx) error {
 	if tx.IsReward() {
 		s.Balances[tx.To] += tx.Value
@@ -70,10 +72,12 @@ func (s *State) apply(tx Tx) error {
 	return nil
 }
 
+// Close -> close file overwrite for State
 func (s *State) Close() {
 	s.dbFile.Close()
 }
 
+// Add -> add new tx to mempool
 func (s *State) Add(tx Tx) error {
 	if err := s.apply(tx); err != nil {
 		return err
@@ -84,6 +88,7 @@ func (s *State) Add(tx Tx) error {
 	return nil
 }
 
+// Persist -> persist transactions into tx file
 func (s *State) Persist() error {
 	mempool := make([]Tx, len(s.txMempool))
 	copy(mempool, s.txMempool)
