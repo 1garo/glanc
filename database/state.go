@@ -35,7 +35,7 @@ func NewStateFromDisk() (*State, error) {
 	scanner := bufio.NewScanner(f)
 
 	state := &State{
-		Balances:  map[Account]uint{},
+		Balances:  balances.Balances,
 		txMempool: []Tx{},
 		dbFile:    f,
 	}
@@ -47,7 +47,6 @@ func NewStateFromDisk() (*State, error) {
 
 		var tx Tx
 		json.Unmarshal(scanner.Bytes(), &tx)
-		fmt.Println("merda", tx)
 		if err := state.apply(tx); err != nil {
 			return nil, err
 		}
