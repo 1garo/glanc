@@ -13,6 +13,7 @@ const flagTo = "to"
 const flagValue = "value"
 const flagData = "data"
 
+// txCmd -> create transaction cli command and it's configs
 func txCmd() *cobra.Command {
 	var txsCmd = &cobra.Command{
 		Use:   "tx",
@@ -29,6 +30,7 @@ func txCmd() *cobra.Command {
 	return txsCmd
 }
 
+// txAddCmd -> Add new transaction cmd
 func txAddCmd() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   "add",
