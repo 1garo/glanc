@@ -2,15 +2,20 @@ package database
 
 import (
 	"bufio"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
+type Snapshot [32]byte
+
 type State struct {
 	Balances  map[Account]uint
 	txMempool []Tx
+	snapshot  Snapshot
 	dbFile    *os.File
 }
 
@@ -38,6 +43,7 @@ func NewStateFromDisk() (*State, error) {
 	state := &State{
 		Balances:  balances.Balances,
 		txMempool: []Tx{},
+		snapshot:  Snapshot{},
 		dbFile:    f,
 	}
 
@@ -52,6 +58,12 @@ func NewStateFromDisk() (*State, error) {
 			return nil, err
 		}
 	}
+
+	err = state.doSnapshot()
+	if err != nil {
+		return nil, err
+	}
+
 	return state, nil
 }
 
@@ -72,6 +84,27 @@ func (s *State) apply(tx Tx) error {
 	return nil
 }
 
+// LatestSnapshot -> get the last snapshot of tx.db transactions
+func (s *State) LatestSnapshot() Snapshot {
+	return s.snapshot
+}
+
+// doSnapshot -> create sha256 snapshot with tx.db content
+func (s *State) doSnapshot() error {
+	_, err := s.dbFile.Seek(0, 0)
+	if err != nil {
+		return err
+	}
+
+	txsData, err := ioutil.ReadAll(s.dbFile)
+	if err != nil {
+		return err
+	}
+
+	s.snapshot = sha256.Sum256(txsData)
+	return nil
+}
+
 // Close -> close file overwrite for State
 func (s *State) Close() {
 	s.dbFile.Close()
@@ -89,22 +122,30 @@ func (s *State) Add(tx Tx) error {
 }
 
 // Persist -> persist transactions into tx file
-func (s *State) Persist() error {
+func (s *State) Persist() (Snapshot, error) {
 	mempool := make([]Tx, len(s.txMempool))
 	copy(mempool, s.txMempool)
 
 	for i := 0; i < len(mempool); i++ {
 		txJson, err := json.Marshal(mempool[i])
 		if err != nil {
-			return err
+			return Snapshot{}, err
 		}
 
+		fmt.Println("persisting")
+		fmt.Printf("\t%s\n", txJson)
 		if _, err := s.dbFile.Write(append(txJson, '\n')); err != nil {
-			return err
+			return Snapshot{}, err
 		}
+
+		err = s.doSnapshot()
+		if err != nil {
+			return Snapshot{}, err
+		}
+		fmt.Printf("new db snapshot: %x\n", s.snapshot)
 
 		s.txMempool = s.txMempool[1:]
 	}
 
-	return nil
+	return s.snapshot, nil
 }
