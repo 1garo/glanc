@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 )
 
+// gen -> load all the content from the genesis file
 type gen struct {
 	Balances map[Account]uint `json:"balances"`
 }
