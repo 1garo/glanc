@@ -17,8 +17,10 @@ type State struct {
 	txMempool []Tx
 	snapshot  Snapshot
 	dbFile    *os.File
+	// latestBlockHash	Hash
 }
 
+//TODO: refactor to Hash instead of snapshot
 // NewStateFromDisk -> load all state information
 func NewStateFromDisk() (*State, error) {
 	cwd, err := os.Getwd()
