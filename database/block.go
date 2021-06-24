@@ -28,7 +28,7 @@ type BlockHeader struct {
 }
 
 type BlockFS struct {
-	Key	Hash `json:"hash`
+	Key	Hash `json:"hash"`
 	Value Block `json:"block"`
 }
 
