@@ -40,7 +40,7 @@ func balancesListCmd() *cobra.Command {
 			defer state.Close()
 
 			var firstFourSnap []byte
-			snap := state.LatestSnapshot()
+			snap := state.LatestBlockHash()
 			firstFourSnap = snap[:4]
 
 			fmt.Printf("Accounts balances: %x\n", firstFourSnap)
